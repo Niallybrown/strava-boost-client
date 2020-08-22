@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { getParameterByName } from '../../utils';
 import { RootState } from '../../store/reducers';
@@ -6,15 +6,14 @@ import { typedUseSelector } from '../../store/conifgureStore';
 import * as authActions from '../../store/actions/auth';
 import { getAccessToken } from '../../utils';
 import * as activitiesActions from '../../store/actions/activities';
-import PRSelect from '../../components/Select';
 import '../../App.css';
-import { BestEffort, Activity } from '../../store/reducers/activities';
+import { Activity } from '../../store/reducers/activities';
 import sortBy from 'lodash/sortBy';
 import round from 'lodash/round';
 import sum from 'lodash/sum';
 import moment from 'moment';
-import BasicActivity from '../BasicActivity';
 import { Tabs } from 'antd';
+import FastestTines from '../FastestTimes';
 
 const TabPane = Tabs.TabPane;
 
@@ -41,15 +40,8 @@ function MainApp() {
   const activities = typedUseSelector(
     (state: RootState) => state.activities.activities,
   );
-  const bestEfforts = typedUseSelector(
-    (state: RootState) => state.activities.bestEfforts,
-  );
-  const bestEffortCategories = Object.keys(bestEfforts).length
-    ? Object.keys(bestEfforts)
-    : [];
   const dispatch = useDispatch();
   const code = getParameterByName('code');
-  const [pRCategory, setPRCatergory] = useState('');
 
   if (!accessToken) {
     if (code) dispatch(authActions.getAuthToken(code));
@@ -84,27 +76,7 @@ function MainApp() {
       )}
       <Tabs defaultActiveKey="1">
         <TabPane tab="Fastest times" key="1">
-          <span>Filtered best efforts: &nbsp;</span>
-          {bestEffortCategories.length ? (
-            <PRSelect
-              onChange={setPRCatergory}
-              options={bestEffortCategories}
-            />
-          ) : null}
-          <ul>
-            {pRCategory
-              ? bestEfforts[pRCategory]
-                  .filter((item: BestEffort) => item.name === pRCategory)
-                  .map((item: BestEffort) => (
-                    <BasicActivity
-                      key={item.id}
-                      start_date={item.start_date}
-                      distance={item.distance}
-                      moving_time={item.moving_time}
-                    />
-                  ))
-              : null}
-          </ul>
+          <FastestTines />
         </TabPane>
         <TabPane tab="Monthly stats" key="2">
           {Object.keys(aggregatedMonthData).map((item) => (
