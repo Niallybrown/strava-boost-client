@@ -21,20 +21,34 @@ export const fetchActivitiesFailed = (payload: types.ActivitiesRequest) => {
   return { type: types.FETCH_ACTIVITIES_FAILURE, payload };
 };
 
-// export const fetchActivitySuccess = (payload) => {
-//   return { type: types.FETCH_ACTIVITY_SUCCESS, payload };
-// };
+export const fetchActivitySuccess = (payload: types.ActivitySuccess) => {
+  return { type: types.FETCH_ACTIVITY_SUCCESS, payload };
+};
 
-// export const getActivity = (id) => {
-//   return async (dispatch) => {
-//     try {
-//       const payload = await activities.getActivity(id);
-//       dispatch(fetchActivitySuccess(payload.best_efforts));
-//     } catch (err) {
-//       dispatch(fetchActivitiesFailed(err));
-//     }
-//   };
-// };
+export const getActivity = (id: number) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(
+      fetchActivitiesRequest({
+        loading: true,
+        error: '',
+      }),
+    );
+    try {
+      const payload = await api.getActivity(id);
+      const prs = payload.data.best_efforts;
+      localStorage.setItem('prs', JSON.stringify({ prs }));
+      dispatch(
+        fetchActivitySuccess({
+          loading: false,
+          error: '',
+          prs: payload.data.best_efforts,
+        }),
+      );
+    } catch (err) {
+      dispatch(fetchActivitiesFailed(err));
+    }
+  };
+};
 
 export const loadActivities = (page: number) => {
   return async (dispatch: Dispatch) => {
@@ -48,7 +62,18 @@ export const loadActivities = (page: number) => {
       let activities: any[] = [];
       const getActivities = async (page: number) => {
         const payload = await api.loadActivities(page);
-        activities = [...activities, ...payload.data];
+        const runs = payload.data.filter((item: any) => item.type === 'Run');
+        const completeActivities = await Promise.all(
+          runs.map(async (run: any) => {
+            const detailedRun = await api.getActivity(run.id);
+            return {
+              ...run,
+              ...detailedRun.data,
+            };
+          }),
+        );
+        activities = [...activities, ...completeActivities];
+        localStorage.setItem('runs', JSON.stringify({ activities }));
         if (payload.data.length === 100) {
           await getActivities((page += 1));
         }
@@ -62,6 +87,7 @@ export const loadActivities = (page: number) => {
         }),
       );
     } catch (error) {
+      console.debug(error);
       dispatch(
         fetchActivitiesFailed({
           loading: false,

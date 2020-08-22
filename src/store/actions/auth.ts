@@ -15,32 +15,30 @@ const fetchAuthFailure = (payload: types.Auth) => {
   return { type: types.FETCH_AUTH_TOKEN_FAILURE, payload };
 };
 
-export const getAuthToken = (code: string) => {
-  return async (dispatch: Dispatch) => {
-    dispatch(
-      fetchAuthRequest({
-        loading: true,
+export const getAuthToken = (code: string) => async (dispatch: Dispatch) => {
+  dispatch(
+    fetchAuthRequest({
+      loading: true,
+      error: '',
+    }),
+  );
+  try {
+    const payload = await authToken(code);
+    localStorage.setItem('token-strava', payload.data.access_token);
+    return dispatch(
+      fetchAuthSuccess({
+        isAuthenticated: true,
         error: '',
+        loading: false,
       }),
     );
-    try {
-      const payload = await authToken(code);
-      localStorage.setItem('token-strava', payload.data.access_token);
-      return dispatch(
-        fetchAuthSuccess({
-          isAuthenticated: true,
-          error: '',
-          loading: false,
-        }),
-      );
-    } catch (err) {
-      dispatch(
-        fetchAuthFailure({
-          isAuthenticated: true,
-          error: err,
-          loading: false,
-        }),
-      );
-    }
-  };
+  } catch (err) {
+    return dispatch(
+      fetchAuthFailure({
+        isAuthenticated: true,
+        error: err,
+        loading: false,
+      }),
+    );
+  }
 };
