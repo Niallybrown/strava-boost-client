@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -11,17 +15,29 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "noEmit": true,
-    "jsx": "react",
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
     "sourceMap": true,
-    "declaration": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "experimentalDecorators": true,
-    "incremental": true,
-    "noFallthroughCasesInSwitch": true,
-    "isolatedModules": true
+    "typeRoots": [
+      "./@types",
+      "./node_modules/@types"
+    ],
+    "noEmit": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "build"]
+  "include": [
+    "src",
+    "config-overrides.js"
+  ],
+  "exclude": [
+    "src/setupProxy.js",
+    "src/schema/graphql.tsx",
+    "src/**/*.stories.ts*",
+    "src/**/*.test.ts*",
+    "src/**/__tests__/*",
+    "src/**/__mocks__/*",
+    "src/packages/test-utils"
+  ]
 }

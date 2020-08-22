@@ -14,7 +14,10 @@ export interface Auth {
 }
 
 interface GetAuthTokenAction {
-  type: typeof FETCH_AUTH_TOKEN_REQUEST | typeof FETCH_AUTH_TOKEN_SUCCESS | typeof FETCH_AUTH_TOKEN_FAILURE;
+  type:
+    | typeof FETCH_AUTH_TOKEN_REQUEST
+    | typeof FETCH_AUTH_TOKEN_SUCCESS
+    | typeof FETCH_AUTH_TOKEN_FAILURE;
   payload: Auth;
 }
 
@@ -27,6 +30,10 @@ export interface ActivitiesRequest {
 
 export interface ActivitiesSuccess extends ActivitiesRequest {
   activities: any[];
+}
+
+export interface ActivitySuccess extends ActivitiesRequest {
+  prs: any[];
 }
 
 export interface ActivitiesRequestAction {
@@ -44,4 +51,13 @@ export interface ActivitiesFailureAction {
   payload: ActivitiesRequest;
 }
 
-export type ActivitiesActionTypes = ActivitiesRequestAction | ActivitiesSuccessAction | ActivitiesFailureAction;
+export interface ActivitySuccessAction {
+  type: typeof FETCH_ACTIVITY_SUCCESS;
+  payload: ActivitySuccess;
+}
+
+export type ActivitiesActionTypes =
+  | ActivitiesRequestAction
+  | ActivitiesSuccessAction
+  | ActivitiesFailureAction
+  | ActivitySuccessAction;
