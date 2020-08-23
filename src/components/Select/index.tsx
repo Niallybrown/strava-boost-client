@@ -14,7 +14,6 @@ const PRSelect = ({ onChange, options }: Props) => {
   };
   return (
     <>
-      <p>hu?</p>
       <Select style={{ width: 120 }} onChange={handleChange}>
         {options.map((item) => (
           <Option key={item} value={item}>

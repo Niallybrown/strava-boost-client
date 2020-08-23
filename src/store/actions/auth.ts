@@ -35,7 +35,7 @@ export const getAuthToken = (code: string) => async (dispatch: Dispatch) => {
   } catch (err) {
     return dispatch(
       fetchAuthFailure({
-        isAuthenticated: true,
+        isAuthenticated: false,
         error: err,
         loading: false,
       }),

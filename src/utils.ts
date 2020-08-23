@@ -19,3 +19,15 @@ export type UpdateObject<T> = (oldState: T, updates: Partial<T>) => T;
 export const updateObject = (x: State, y: State): State => {
   return { ...x, ...y };
 };
+
+export const formatTime = (time: number) => {
+  const minutes = Math.floor(time / 60);
+  const seconds = time - minutes * 60;
+  const hours = Math.floor(time / 3600);
+  if (hours) {
+    return `${hours}:${minutes}:${seconds}`;
+  } else if (minutes) {
+    return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+  }
+  return `${seconds}s`;
+};

@@ -8,7 +8,7 @@ export type InitialState = {
 };
 
 const initialState: InitialState = {
-  isAuthenticated: false,
+  isAuthenticated: !!localStorage.getItem('token-strava'),
   loading: false,
   error: null,
 };
@@ -17,7 +17,7 @@ const updateObject: UpdateObject<InitialState> = (x, y) => {
   return { ...x, ...y };
 };
 
-export default function analysis(state = initialState, action: types.AuthTypes) {
+export default function auth(state = initialState, action: types.AuthTypes) {
   switch (action.type) {
     case types.FETCH_AUTH_TOKEN_REQUEST:
     case types.FETCH_AUTH_TOKEN_SUCCESS:
