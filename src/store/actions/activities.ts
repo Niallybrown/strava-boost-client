@@ -73,12 +73,12 @@ export const loadActivities = (page: number) => {
           }),
         );
         activities = [...activities, ...completeActivities];
-        localStorage.setItem('runs', JSON.stringify({ activities }));
-        if (payload.data.length === 100) {
-          await getActivities((page += 1));
-        }
+        // if (payload.data.length === 100 && page < 4) {
+        //   await getActivities((page += 1));
+        // }
       };
       await getActivities(page);
+      // localStorage.setItem('runs', JSON.stringify({ activities }));
       dispatch(
         fetchActivitiesSuccess({
           loading: false,
@@ -87,7 +87,7 @@ export const loadActivities = (page: number) => {
         }),
       );
     } catch (error) {
-      console.debug(error);
+      console.error(error);
       dispatch(
         fetchActivitiesFailed({
           loading: false,
