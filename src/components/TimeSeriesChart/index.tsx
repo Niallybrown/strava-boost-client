@@ -18,6 +18,7 @@ const TimeSeriesChart = ({
   ];
   const options = {
     chart: {
+      height: 380,
       type: 'scatter',
       zoom: {
         type: 'xy',
@@ -44,9 +45,16 @@ const TimeSeriesChart = ({
     },
     yaxis: {
       min: minYAxis,
+      title: {
+        text: 'Time (seconds)',
+      },
     },
     xaxis: {
       type: 'datetime',
+      title: {
+        text: 'Date',
+        offsetY: 15,
+      },
     },
     tooltip: {
       x: {

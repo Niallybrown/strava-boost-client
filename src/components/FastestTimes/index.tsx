@@ -8,7 +8,9 @@ import {
 import PRSelect from '../../components/Select';
 import BasicActivity from '../BasicActivity';
 import TimeSeriesChart from '../TimeSeriesChart';
-import meanBy from 'lodash/mean';
+import { Statistic } from 'antd';
+import { FireOutlined } from '@ant-design/icons';
+import { formatTime } from '../../utils';
 
 const FastestTines = ({ activities }: { activities: Activity[] }) => {
   const [pRCategory, setPRCatergory] = useState('');
@@ -38,21 +40,37 @@ const FastestTines = ({ activities }: { activities: Activity[] }) => {
 
   const times = chartData.map((item: [number, number]) => item[1]);
 
-  const meanTime = meanBy(times);
-
   const filteredChartData = chartData.filter(
-    (item: [number, number]) => item[1] < meanTime * 2,
+    (item: [number, number]) => item[1] < Math.min(...times) * 2.5,
   );
 
   const fastestTime = Math.min(...times);
 
   return (
     <>
-      <span>Filtered best efforts: &nbsp;</span>
-      {bestEffortCategories.length ? (
-        <PRSelect onChange={setPRCatergory} options={bestEffortCategories} />
-      ) : null}
-      {pRCategory ? (
+      <span
+        style={{
+          display: 'inline-block',
+        }}
+      >
+        <p>Filtered best efforts: &nbsp;</p>
+        {bestEffortCategories.length ? (
+          <PRSelect onChange={setPRCatergory} options={bestEffortCategories} />
+        ) : null}
+      </span>
+      {pRCategory && (
+        <Statistic
+          style={{
+            display: 'inline-block',
+            verticalAlign: 'top',
+            marginLeft: '1rem',
+          }}
+          title="Fastest time"
+          value={formatTime(fastestTime)}
+          prefix={<FireOutlined />}
+        />
+      )}
+      {pRCategory && (
         <>
           <TimeSeriesChart
             chartData={filteredChartData}
@@ -71,7 +89,7 @@ const FastestTines = ({ activities }: { activities: Activity[] }) => {
               ))}
           </ul>
         </>
-      ) : null}
+      )}
     </>
   );
 };
